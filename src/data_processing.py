@@ -22,7 +22,7 @@ def load_and_preprocess_data(infile: str) -> List[str]:
         text = file.read()  # Read the entire file
 
     # Preprocess and tokenize the text
-    # TODO
+
     tokens: List[str] = tokenize(text)
 
     return tokens
@@ -38,7 +38,7 @@ def create_lookup_tables(words: List[str]) -> Tuple[Dict[str, int], Dict[int, st
         A tuple containing two dictionaries. The first dictionary maps words to integers (vocab_to_int),
         and the second maps integers to words (int_to_vocab).
     """
-    # TODO
+
     word_counts: Counter = Counter(words)
     # Sorting the words from most to least frequent in text occurrence.
     sorted_vocab: List[int] = dict(sorted(word_counts.items()))
@@ -69,7 +69,6 @@ def subsample_words(words: List[str], vocab_to_int: Dict[str, int], threshold: f
         List[int]: A list of integers representing the subsampled words, where some high-frequency words may be removed.
         Dict[str, float]: Dictionary associating each word with its frequency.
     """
-    # TODO
     # Convert words to integers
     int_words: List[int] = [vocab_to_int[word] for word in words]
     word_counts = Counter(words)
@@ -148,8 +147,11 @@ def cosine_similarity(embedding: torch.nn.Embedding, valid_size: int = 16, valid
         sim = (a . b) / |a||b| where `a` and `b` are embedding vectors.
     """
 
-    # TODO
-    valid_examples: torch.Tensor = None
-    similarities: torch.Tensor = None
+    # Choose the valid examples
+
+    valid_examples: torch.Tensor = torch.tensor(torch.randint(0, valid_window, (valid_size,)), device=device)
+    # Extract the embeddings of the valid examples
+    valid_vectors: torch.Tensor = embedding(valid_examples)
+    similarities: torch.Tensor = torch.matmul(valid_vectors, embedding.weight.T)
 
     return valid_examples, similarities
