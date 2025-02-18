@@ -50,6 +50,8 @@ def test_forward_noise():
     batch_size = 10
     n_samples = 5
     model = SkipGramNeg(n_vocab, n_embed)
+    device = torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
+    model.to(device)
 
     noise_vectors = model.forward_noise(batch_size, n_samples)
     
