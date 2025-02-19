@@ -121,13 +121,10 @@ class NegativeSamplingLoss(nn.Module):
         """
 
         # Compute log-sigmoid loss for correct classifications
-        # TODO
-        out_loss = None
+        out_loss = torch.log(torch.sigmoid(torch.bmm(output_vectors.unsqueeze(1), input_vectors.unsqueeze(2)).squeeze())).sum()
 
         # Compute log-sigmoid loss for incorrect classifications
-        # TODO
-        noise_loss = None
+        noise_loss = torch.log(torch.sigmoid(torch.bmm(noise_vectors, -input_vectors.unsqueeze(2)).squeeze())).sum()
 
         # Return the negative sum of the correct and noisy log-sigmoid losses, averaged over the batch
-        # TODO
-        return None
+        return -(out_loss + noise_loss) / input_vectors.shape[0]
