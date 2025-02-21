@@ -70,11 +70,10 @@ def subsample_words(words: List[str], vocab_to_int: Dict[str, int], threshold: f
         Dict[str, float]: Dictionary associating each word with its frequency.
     """
     # Convert words to integers
-    int_words: List[int] = [vocab_to_int[word] for word in words]
     word_counts = Counter(words)
     total_words = len(words)
     freqs: Dict[str, float] = {word: count / total_words for word, count in word_counts.items()}
-    train_words: List[str] = [word  for word in freqs if (torch.rand(1) > (1- torch.sqrt(torch.tensor(threshold/freqs[word]))))]
+    train_words: List[int] = [vocab_to_int[word] for word in words if torch.rand(1).item() > (1 - torch.sqrt(torch.tensor(threshold / freqs[word]))).item()]
 
     return train_words, freqs
 
@@ -126,7 +125,7 @@ def get_batches(words: List[int], batch_size: int, window_size: int = 5):
     
         yield inputs, targets
 
-def cosine_similarity(embedding: torch.nn.Embedding, valid_size: int = 16, valid_window: int = 100, device: str = 'cpu'):
+def cosine_similarity(embedding: torch.nn.Embedding, valid_size: int = 16, valid_window: int = 100, device = 'cpu'):
     """Calculates the cosine similarity of validation words with words in the embedding matrix.
 
     This function calculates the cosine similarity between some random words and

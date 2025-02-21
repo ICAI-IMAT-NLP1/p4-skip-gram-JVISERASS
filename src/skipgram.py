@@ -81,8 +81,7 @@ class SkipGramNeg(nn.Module):
         # Sample words from our noise distribution
         noise_words: torch.Tensor = torch.multinomial(noise_dist, batch_size * n_samples, replacement=True)
 
-        device = torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
-        noise_words: torch.Tensor = noise_words.to(device)
+        noise_words: torch.Tensor = noise_words
 
         # Reshape output vectors to size (batch_size, n_samples, n_embed)
         noise_vectors: torch.Tensor = self.out_embed(noise_words).view(batch_size, n_samples, self.n_embed)
@@ -125,6 +124,7 @@ class NegativeSamplingLoss(nn.Module):
 
         # Compute log-sigmoid loss for incorrect classifications
         noise_loss = torch.log(torch.sigmoid(torch.bmm(noise_vectors, -input_vectors.unsqueeze(2)).squeeze())).sum()
+
 
         # Return the negative sum of the correct and noisy log-sigmoid losses, averaged over the batch
         return -(out_loss + noise_loss) / input_vectors.shape[0]

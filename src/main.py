@@ -28,7 +28,7 @@ def main():
     model_filename = "skipgram_model.pth"  # Filename to save the model
     model_path = os.path.join(runs_folder, model_filename)  # Full path to the model
     train_model = True
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = "mps" if torch.backends.mps.is_available() else "cpu"
 
     print("Step 1: Loading and preprocessing data...")
     tokens = load_and_preprocess_data(file_path)
